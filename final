@@ -1,0 +1,97 @@
+#import  bibliotec
+from __future__ import print_function
+import rospy
+import cv2
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge 
+from clover import srv
+from std_srvs.srv import Trigger
+from std_msgs.msg import Float32MultiArray
+
+import math
+from PIL import Image as pimg
+#-----------------------------------------------
+def read_sensor():
+    data = rospy.wait_for_message('sensors', Float32MultiArray).data
+    print(data)
+
+def image_callback(data):
+    telem = get_telemetry(frame_id='aruco_map')
+    cv_image = bridge.imgmsg_to_cv2(data, 'bgr8')  # OpenCV image
+    cv2.putText(cv_image, 'y = '+str("%.1f" % telem.y), (0,12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0),1)
+    cv2.putText(cv_image, 'x = '+str("%.1f" % telem.x), (0,24), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0),1)
+    cv2.putText(cv_image, 'z = '+str("%.1f" % telem.z), (0,36), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255),1)
+    out.write(cv_image)
+
+    cv2.imshow('vot ono politeh', cv_image)
+    cv2.waitKey(1)
+
+
+rospy.init_node('flight')
+bridge = CvBridge()
+out = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 10, (320, 240))
+
+# ------------------------------------------------------------------------------------------------------------------------------
+
+
+get_telemetry = rospy.ServiceProxy('get_telemetry', srv.GetTelemetry)
+navigate = rospy.ServiceProxy('navigate', srv.Navigate)
+land = rospy.ServiceProxy('land', Trigger)
+
+
+# coords
+
+coords = {1: [0 ,0 ,1],
+          2: [2.6 ,2.9 , 1],
+          9: [8.9 ,4.1 ,1 ],
+          4: [2.8 ,3.4 , 1],
+          6: [8.4 ,8.4 , 1],
+          11: [6.3 ,6.4 ,1 ],
+          8: [8.8 ,0.2 , 1],
+          7: [3.6 ,8.8 , 1],
+          5: [5.3 ,5.1 , 1],
+          10: [4.5 ,4.4 ,1 ],
+          3: [0.2 ,8.5 , 1]}
+
+path = [1, 2, 3, 4, 5, 6, 7 ,8 ,9 , 10 ,11 ]
+
+# ------------------------------------------------------------------------------------------------------------------------------
+rospy.sleep(8)
+get_telemetry = rospy.ServiceProxy('get_telemetry', srv.GetTelemetry)
+navigate = rospy.ServiceProxy('navigate', srv.Navigate)
+land = rospy.ServiceProxy('land', Trigger)
+
+#polyot 
+print ('vzlet')
+image_sub = rospy.Subscriber('main_camera/image_raw_throttled', Image, image_callback)
+navigate(x=0, y=0, z=1, speed=1, frame_id='body', auto_arm=True)
+rospy.sleep(2)
+navigate(x=0, y=0, z=1, speed=1, frame_id='aruco_map')
+rospy.sleep(1)
+
+for i in path:
+    print("go to ", i, coords[i])
+    navigate(x = coords[i][0], y= coords[i][1], z = coords[i][2], speed = 2.5, frame_id = 'aruco_map')
+    rospy.sleep(8)
+    if i==4:
+        rospy.sleep(8)
+
+    read_sensor()
+
+
+i=1
+with open('temp.txt', 'a') as f:
+     f.write('v tochke '+str(i)+' '+str('temperature')+'\n')
+
+
+#go to home
+print('go to home')
+navigate(x=0, y=0, z=1, speed=2, frame_id='aruco_map')
+rospy.sleep(7)
+land()
+
+rospy.sleep(3)
+out.release()
+cv2.destroyAllWindows()
+
+rospy.spin()
