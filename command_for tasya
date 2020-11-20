@@ -1,0 +1,36 @@
+from __future__ import print_function
+import rospy
+from clover import srv
+from std_srvs.srv import Trigger
+from std_msgs.msg import Float32MultiArray
+
+rospy.init_node('flight')
+
+import rospy
+from clover import srv
+from std_srvs.srv import Trigger
+
+
+
+
+
+
+
+
+
+
+
+
+
+def read_sensor():
+    data = rospy.wait_for_message('sensors', Float32MultiArray).data
+    print(data)
+
+
+
+read_sensor()
+
+
+i=1
+with open('temp.txt', 'a') as f:
+     f.write('v tochke '+str(i)+' '+str('temperature')+'\n')
