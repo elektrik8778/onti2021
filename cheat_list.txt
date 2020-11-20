@@ -21,13 +21,18 @@ land = rospy.ServiceProxy('land', Trigger)
 
 2)	Полёт
 Взлёт:
-navigate(x=0, y=0, z=1.5, speed=0.5, frame_id='body', auto_arm=True)
+Для файла: navigate(x=0, y=0, z=1.5, speed=0.5, frame_id='body', auto_arm=True)
+Для терминала: 
 
-Полёт в точку:
-navigate(x=0, y=0, z=1.5, speed=1, frame_id='aruco_map')
+Полёт в точку: 
+Для файла: navigate(x=0, y=0, z=1.5, speed=1, frame_id='aruco_map')
 
-Пауза:
+Пауза: 
 rospy.sleep(4)
 
 Посадка:
-land()
+Для файла: land()
+
+Запись в файл (построчно):
+with open('temp.txt', 'a') as f:
+     f.write('v tochke '+str(i)+' '+str(temperature)+'\n')
