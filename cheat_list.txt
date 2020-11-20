@@ -1,0 +1,33 @@
+1)	Заготовка для программы
+from __future__ import print_function
+import rospy
+import cv2
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge 
+from clover import srv
+from std_srvs.srv import Trigger
+from std_msgs.msg import Float32MultiArray
+
+import math
+from pyzbar.pyzbar import decode
+from PIL import Image as pimg
+
+rospy.init_node('flight')
+
+get_telemetry = rospy.ServiceProxy('get_telemetry', srv.GetTelemetry)
+navigate = rospy.ServiceProxy('navigate', srv.Navigate)
+land = rospy.ServiceProxy('land', Trigger)
+
+
+2)	Полёт
+Взлёт:
+navigate(x=0, y=0, z=1.5, speed=0.5, frame_id='body', auto_arm=True)
+
+Полёт в точку:
+navigate(x=0, y=0, z=1.5, speed=1, frame_id='aruco_map')
+
+Пауза:
+rospy.sleep(4)
+
+Посадка:
+land()
