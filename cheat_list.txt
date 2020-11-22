@@ -37,5 +37,5 @@ land = rospy.ServiceProxy('land', Trigger)
 Для терминала: rosservice call /land
 
 Запись в файл (построчно):
-with open('temp.txt', 'a') as f:
-     f.write('v tochke '+str(i)+' '+str(temperature)+'\n')
+with open('data_from_sensor.txt', 'a') as f:
+     f.write('v tochke '+str(i)+' '+str(read_sensor())+'\n')
