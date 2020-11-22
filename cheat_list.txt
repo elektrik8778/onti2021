@@ -21,17 +21,20 @@ land = rospy.ServiceProxy('land', Trigger)
 
 2)	Полёт
 Взлёт:
-Для файла: navigate(x=0, y=0, z=1.5, speed=0.5, frame_id='body', auto_arm=True)
-Для терминала: 
+Для файла: navigate(x=0, y=0, z=1.7, speed=0.5, frame_id='body', auto_arm=True)
+Для терминала: rosservice call /navigate "{x: 0.0, y: 0.0, z: 1.7, yaw: 0, yaw_rate: 0.0, speed: 1.0, frame_id: 'body', auto_arm: true}"
 
 Полёт в точку: 
 Для файла: navigate(x=0, y=0, z=1.5, speed=1, frame_id='aruco_map')
+Для терминала: rosservice call /navigate "{x: 0.0, y: 0.0, z: 1.7, speed: 1.5, frame_id: 'arucp_map'}"
 
-Пауза: 
-rospy.sleep(4)
+
+
+Пауза: rospy.sleep(4)
 
 Посадка:
 Для файла: land()
+Для терминала: rosservice call /land
 
 Запись в файл (построчно):
 with open('temp.txt', 'a') as f:
