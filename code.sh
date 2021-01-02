@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 git clone https://github.com/elektrik8778/onti2021.git
-cd stainer
+cd /Desktop/stainer/
 
 
 cp -f Vlad.py /home/clover/Desktop/stainer/2/
