@@ -8,6 +8,6 @@ cp -f Vlad.py /home/clover/Desktop/stainer/2/
 cp -f cheat_list.txt /home/clover/Desktop/stainer/1/
 
 cd ..
-rm -rf onti2021
+#rm -rf onti2021
 
 echo "Done!"
